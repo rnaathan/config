@@ -1,0 +1,95 @@
+# Common properties for all services
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+
+  boot:
+    admin:
+      client:
+        url: ${DISCOVERY_SERVICE_URL:http://localhost:9061}/boot-admin
+
+  data:
+#    mongodb:
+#        authentication-database: admin
+#        username: mcadmin
+#        password: mcadmin
+#        port: 27017
+#        host: 10.88.0.178
+
+
+# Eureka discovery service configuration details
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    hostname: localhost
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: ${DISCOVERY_SERVICE_URL:http://localhost:9061}/eureka/
+
+
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+app:
+  service:
+    userName: developer
+    clientId: 1
+
+  search:
+    max-results: 20000
+
+  jwt:
+    issuer: http://eversana.com/
+    signingKey: FP0cOIkoTYPUQ-0Od_rHRWAdC01gD7FIFJkL5SSVV2gMnWa1cVr2h6BGFeUXdH29L43cHuIUYP5KjX4o9AYyTHug3Bn14gCfQiLc6rTbAIGt3-0HqfnO2GKKIb-u25aApcZR3dHrJcAXwMdRWe3tfQ6jYzXg9Kms2o3UjXOayjj0X5jgXADiM59wok9D_p7T1E0E97js0GhkYuEbg8AVTZHgxHF9t1VeHNUilGXYDDSh8k3wtbv1QR4Z-2n7c1tP8XwqKBPwnOhqj-AI8sOrcA8xOwaL2FPyjiZYPn-FaoAOSW0IPe7Cli_4zjHEi1Es3wYIAyQLPBX-fGr7NpvAKg
+    accessTokenTTL: 1440 # 24 hours
+    refreshTokenTTL: 10080 # 7 days
+
+  paths:
+    runtime-root: ${HOME}/dev/eversana-cloud/runtime
+    grid-repo: ${app.paths.runtime-root}/grid-repo
+#    file-descriptors: ${app.paths.runtime-root}/file-descriptors
+#    dropzone-root: ${USERPROFILE}/dev/membercentric/dropzone
+
+
+  exports:
+    path: ${USERPROFILE}/dev/membercentric/exports/
+    data:
+      response:
+        row:
+          limit: 200000
+
+logging:
+  file: ${log.directory:/opt/app/ec/log}/${spring.application.name}.log
+  pattern:
+    console: "%-15.15mdc{loggingKey:-system}|%2.2p|%d{MM-dd HH:mm:ss}|%20.30logger ^ %m%n"
+    file:    "%-15.15mdc{loggingKey:-system}|%2.2p|%d{MM-dd HH:mm:ss}|%20.30logger ^ %m%n"
+  level:
+    ROOT: FATAL
+    com:
+      eversana: DEBUG
+      netflix: FATAL
+    org:
+      springframework:
+        beans: ERROR
+        security: WARN
+        web: WARN
+        cloud: ERROR
+        boot:
+          autoconfigure: ERROR
+    net:
+      sf:
+        flatpack: ERROR
